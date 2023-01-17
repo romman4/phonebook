@@ -1,5 +1,6 @@
 package ru.netology.theromman.phonebook.repository;
 
+import lombok.SneakyThrows;
 import ru.netology.theromman.phonebook.config.PhonebookProperties;
 import ru.netology.theromman.phonebook.model.Contact;
 
@@ -55,7 +56,8 @@ public final class PhonebookRepositoryFile implements PhonebookRepository {
     }
 
     //region region for singleton realization
-    public static PhonebookRepositoryFile getInstance(PhonebookProperties phonebookProperties) throws IOException {
+    @SneakyThrows
+    public static PhonebookRepositoryFile getInstance(PhonebookProperties phonebookProperties) {
         if (instance == null) {
             return new PhonebookRepositoryFile(phonebookProperties);
         } else return instance;
