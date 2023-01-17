@@ -15,6 +15,6 @@ public class CommandExecutorPrintAll implements CommandExecutor {
 
     @Override
     public String getSupportedOperation() {
-        return "PRINT_ALL";
+        return "ALL";
     }
 }

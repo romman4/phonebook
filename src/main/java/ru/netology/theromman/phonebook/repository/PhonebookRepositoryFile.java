@@ -4,10 +4,9 @@ import lombok.SneakyThrows;
 import ru.netology.theromman.phonebook.config.PhonebookProperties;
 import ru.netology.theromman.phonebook.model.Contact;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -40,17 +39,13 @@ public final class PhonebookRepositoryFile implements PhonebookRepository {
         }
     }
 
+    @SneakyThrows
     @Override
     public Collection<Contact> getAllContacts() {
         var resultCollection = new ArrayList<Contact>();
-        try (
-                FileReader fileReader = new FileReader(phonebookProperties.getFileName());
-                BufferedReader reader = new BufferedReader(fileReader)) {
-            while (reader.ready()) {
-                resultCollection.add(Contact.fromString(reader.readLine()));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        var contacts = Files.readAllLines(Paths.get(phonebookProperties.getFileName()));
+        for (String contactString : contacts) {
+            resultCollection.add(Contact.fromString(contactString));
         }
         return resultCollection;
     }
