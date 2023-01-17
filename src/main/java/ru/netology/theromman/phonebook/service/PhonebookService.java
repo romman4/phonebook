@@ -7,4 +7,5 @@ import java.util.Collection;
 public interface PhonebookService {
     void createContact(Contact contact);
     Collection<Contact> getAllContacts();
+    void removeContact(String phoneNumber);
 }

@@ -28,4 +28,9 @@ public class PhonebookServiceFile implements PhonebookService {
             return Collections.emptyList();
         }
     }
+
+    @Override
+    public void removeContact(String phoneNumber) {
+        phonebookRepository.removeContact(phoneNumber);
+    }
 }

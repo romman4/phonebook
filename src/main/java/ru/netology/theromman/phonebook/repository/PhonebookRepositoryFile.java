@@ -11,6 +11,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public final class PhonebookRepositoryFile implements PhonebookRepository {
 
@@ -48,6 +51,34 @@ public final class PhonebookRepositoryFile implements PhonebookRepository {
             resultCollection.add(Contact.fromString(contactString));
         }
         return resultCollection;
+    }
+
+    @SneakyThrows
+    @Override
+    public void removeContact(String phoneNumberToFind) {
+        var tempFileName = phonebookProperties.getFileName() + "_temp";
+        Path sourceFilePath = Path.of(phonebookProperties.getFileName());
+        Path tempFilePath = Path.of(tempFileName);
+        var sourceFileLines = Files.readAllLines(Paths.get(phonebookProperties.getFileName()));
+        var targetFileContacts = new ArrayList<Contact>();
+        for (String line : sourceFileLines) {
+            var currentContact = Contact.fromString(line);
+            if (!currentContact.phoneNumber().equals(phoneNumberToFind)) {
+                targetFileContacts.add(currentContact);
+            }
+        }
+        Files.createFile(tempFilePath);
+        Files.writeString(tempFilePath, contactsToString(targetFileContacts));
+        Files.move(tempFilePath, tempFilePath.resolveSibling(sourceFilePath.getFileName()), REPLACE_EXISTING);
+    }
+
+    private String contactsToString(List<Contact> contacts) {
+        var targetStringBuilder = new StringBuilder();
+        for (Contact c : contacts) {
+            targetStringBuilder.append(c.toString());
+            targetStringBuilder.append("\n");
+        }
+        return targetStringBuilder.toString();
     }
 
     //region region for singleton realization
